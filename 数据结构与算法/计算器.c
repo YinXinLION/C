@@ -184,6 +184,7 @@ void last(char str[])
                 else
                 sum = sum * 10 + (str[j] - '0');
                 j++;
+                i = j- 1;
             }
             top_num = push_stack(top_num , sum);
             sum = 0;
