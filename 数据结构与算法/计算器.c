@@ -12,13 +12,11 @@
 #define true 1
 #define false 0
 
-
 typedef struct ele
 {
     int data;
     struct ele *next;
 }stack;
-
 
 void last(char str[]);
 stack * InitStack(stack *top);
@@ -30,8 +28,6 @@ char compare(char a , char b);
 int judge(char i);
 int Operate(int a, char operate ,int b);
 void menu();
-
-
 
 stack * InitStack(stack *top) //初始化栈
 {
@@ -120,15 +116,22 @@ char compare(char a , char b)  //规则表
         case ')': j = 5; break;
         case '#': j = 6; break;
     }
-    return pre[i][j];
+    return pre[i][j]; //得出优先级大小
 }
 
 int judge(char i)  //判断是 数字 还是 符号
 {
+    int j;
+    char s[7] = {'+','-','*','/','(',')','#'};
     if('0' <= i && i <= '9')
-    return 0;
-    else
-    return 1;
+    return false; //0
+    for(j = 0; j < 7; j++)
+    {
+        if(s[j] == i)
+        return true;
+    }
+    return 2; //2 为出错
+    
 }
 
 
@@ -137,7 +140,6 @@ int Operation(int a, char operate ,int b) //两数进行计算
     int i ,j ,result;
     i = a;
     j = b;
-
     switch(operate)
     {
         case '+': result = i + j; break;
@@ -159,13 +161,14 @@ void menu() //菜单 输入
 void last(char str[])
 {
     int i = 0 , flag; //flag 0为数字 1为 运算符
-    stack *top_cha = NULL; 
-    stack *top_num = NULL ;
+    stack *top_cha = NULL; //运算符栈
+    stack *top_num = NULL; //数字栈
     int sum = 0;
     char com;   //比较
-    int operate ,a ,b ,result;
-    int j;
+    int operate ,a ,b ,result; //operate保存操作符 a,b保存操作数 result保存最后结果
+    int j; //辅佐扫描字符串为数字
     top_cha = push_stack(top_cha ,'#');
+    top_num = InitStack(top_num);
     while(str[i] != '#' || (top_cha -> data) != '#')
     {
         if(str[i] == ' ')
@@ -173,8 +176,8 @@ void last(char str[])
             i++;
             continue;
         }
-        flag = judge(str[i]);
-        if(flag == 0)
+        flag = judge(str[i]); //判断是字符数字 还是 运算符
+        if(flag == 0) //是数字的话
         {
             j = i;
             while(1)
@@ -189,18 +192,18 @@ void last(char str[])
             top_num = push_stack(top_num , sum);
             sum = 0;
         }
-        if(flag == 1)
+        if(flag == 1)//是字符的话
         {
-            com = compare(top_cha -> data ,str[i]);
+            com = compare(top_cha -> data ,str[i]); //比较栈顶的运算符和即将放入的运算符这两个的优先级
             switch(com)
             {
-                case '<':
+                case '<'://栈顶运算符小
                 top_cha = push_stack(top_cha ,str[i]);
                 break;
-                case '=':
+                case '='://运算符优先级一样
                 top_cha = pop_stack(top_cha,&operate);
                 break;
-                case '>':
+                case '>'://栈顶运算符大
                 top_cha = pop_stack(top_cha ,&operate);
                 top_num = pop_stack(top_num ,&b); 
                 top_num = pop_stack(top_num ,&a);
@@ -209,15 +212,24 @@ void last(char str[])
                 break;
             }
         }
+        if(flag != true && flag != false)
+        {
+            printf("input error\n");
+            exit(0);
+        }
         i++;
     }
-    
-    result = top_num -> data;
-    printf("%d",result);
+    result = top_num -> data; //存放结果
+    printf("->%d\n",result);
 }
 
 int main(void)
 {
-    menu();
+    printf("Instruction : Please add at the end # ;\n");
+    printf("example: 2+3#\n");
+    while(1)
+    {
+        menu();
+    }
     return 0;
 }
