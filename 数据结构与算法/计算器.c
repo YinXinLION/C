@@ -14,7 +14,7 @@
 
 typedef struct ele
 {
-    int data;
+    double data;
     struct ele *next;
 }stack;
 
@@ -22,11 +22,11 @@ void last(char str[]);
 stack * InitStack(stack *top);
 int StackEmpty(stack *top);
 stack *create_node();
-stack *push_stack(stack *top ,int a);
-stack *pop_stack(stack *top ,int *operate);
+stack *push_stack(stack *top ,double a);
+stack *pop_stack(stack *top ,double *operate);
 char compare(char a , char b);
 int judge(char i);
-int Operate(int a, char operate ,int b);
+double Operate(double a, char operate ,double b);
 void menu();
 
 stack * InitStack(stack *top) //初始化栈
@@ -55,7 +55,7 @@ stack *create_node() //创建节点
 
 
 
-stack *push_stack(stack *top ,int a)  //入栈
+stack *push_stack(stack *top ,double a)  //入栈
 {
     stack *p;
     p = create_node();
@@ -71,7 +71,7 @@ stack *push_stack(stack *top ,int a)  //入栈
     return top;
 }
 
-stack *pop_stack(stack *top ,int *operate)  //出栈
+stack *pop_stack(stack *top ,double *operate)  //出栈
 {
     stack *p;
     *operate = top -> data;
@@ -130,14 +130,18 @@ int judge(char i)  //判断是 数字 还是 符号
         if(s[j] == i)
         return true;
     }
+    if(i == '.')
+    return 3;
+
     return 2; //2 为出错
     
 }
 
 
-int Operation(int a, char operate ,int b) //两数进行计算
+double Operation(double a, char operate ,double b) //两数进行计算
 {
-    int i ,j ,result;
+    double i ,j; 
+    double result;
     i = a;
     j = b;
     switch(operate)
@@ -160,12 +164,13 @@ void menu() //菜单 输入
 
 void last(char str[])
 {
-    int i = 0 , flag; //flag 0为数字 1为 运算符
+    int i = 0 , flag ,stat = 0; //flag 0为数字 1为 运算符
     stack *top_cha = NULL; //运算符栈
     stack *top_num = NULL; //数字栈
-    int sum = 0;
+    double sum = 0;
+    double op = 10;
     char com;   //比较
-    int operate ,a ,b ,result; //operate保存操作符 a,b保存操作数 result保存最后结果
+    double operate ,a ,b ,result; //operate保存操作符 a,b保存操作数 result保存最后结果
     int j; //辅佐扫描字符串为数字
     top_cha = push_stack(top_cha ,'#');
     top_num = InitStack(top_num);
@@ -182,15 +187,33 @@ void last(char str[])
             j = i;
             while(1)
             {
-                if(judge(str[j]) == 1)
-                break;
-                else
-                sum = sum * 10 + (str[j] - '0');
+                if(stat == 0)
+                {
+                    if(judge(str[j]) == false)
+                    sum = sum * 10 + (str[j] - '0');
+                    
+                }
+                if(judge(str[j]) == true)
+                {
+                    i = j - 1;
+                    break;
+                }
+                if(judge(str[j]) == 3)
+                {
+                    stat = 1;
+                    j++;
+                }
+                if(stat == 1)
+                {
+                    sum = sum + (str[j] - '0')/op;
+                    op = op * 10;
+                }
                 j++;
-                i = j- 1;
             }
             top_num = push_stack(top_num , sum);
+            stat = 0;
             sum = 0;
+            op = 10;
         }
         if(flag == 1)//是字符的话
         {
@@ -220,7 +243,7 @@ void last(char str[])
         i++;
     }
     result = top_num -> data; //存放结果
-    printf("->%d\n",result);
+    printf("->%lf\n",result);
 }
 
 int main(void)
