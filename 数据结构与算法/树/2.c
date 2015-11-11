@@ -25,6 +25,8 @@ BiTree Find_element(BiTree T,int value);//二叉查找树的查找元素
 BiTree Find_Max(BiTree T);
 BiTree Find_Max1(BiTree T);
 BiTree Find_Min(BiTree T);
+void Preorder(BiTree T);
+BiTree Insert(BiTree T,int value);
 
 
 int main()
@@ -47,6 +49,11 @@ int main()
     printf("最大数是:%c\n",F -> element);
     F = Find_Min(T);
     printf("最大数是:%c\n",F -> element);
+
+    T = Insert(T , '5');
+    printf("先序遍历为:");
+    Preorder(T);
+    printf("\n");
 }
 
 BiTree create_BTree()
@@ -56,7 +63,7 @@ BiTree create_BTree()
     BiTree T;
     c = getchar();
     do{
-         ch = fgetc(stdin);
+        ch = fgetc(stdin);
     } while (ch != '\n' && ch != EOF);
     if(c == '#')
     {
@@ -67,7 +74,6 @@ BiTree create_BTree()
         T -> element = c;
         T -> Lchild = create_BTree();
         T -> Rchild = create_BTree();
-
     }
     return T;
 }
@@ -112,4 +118,40 @@ BiTree Find_Min(BiTree T)
     return T;
     else 
     return Find_Min(T -> Lchild);
+}
+
+//插入二叉树
+BiTree Insert(BiTree T,int value)
+{
+    if(T == NULL)
+    {
+        //crreate and return a one-node tree
+        T = (BiTree)malloc(sizeof(BiTNode));
+        if(T == NULL)
+        printf("无法创建!error!");
+        else
+        {
+            T -> element = value;
+            T -> Lchild = T -> Rchild = NULL;
+        }
+    }
+    else if(value < (T -> element))
+    T -> Lchild = Insert(T -> Lchild , value);
+    else if(value > (T -> element))
+    T -> Rchild = Insert(T -> Rchild , value);
+    //如果value在树中不会创建
+    return T; 
+}
+
+//先序递归遍历二叉树
+void Preorder(BiTree T)
+{
+    if(T == NULL)
+    return ;
+    else
+    {
+        printf("%c ",T -> element);//访根
+        Preorder(T -> Lchild);//访左
+        Preorder(T -> Rchild);//访右
+    }
 }
