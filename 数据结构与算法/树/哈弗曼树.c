@@ -23,6 +23,7 @@ void CrtHuffmanTree(int w[] ,int n);
 void select_tree(HTnode ht[] ,int n ,int *s1 ,int *s2);
 void CrtHuffmanCode_function(HuffmanCode hc[] ,int n);
 void decode(HuffmanCode hc[] ,int n);
+void Print_Tree(int n , int heigh);
 
 int main(void)
 {
@@ -30,6 +31,7 @@ int main(void)
     int i;
     int w[4] = {1,1,2,3};
     int ch;
+    int heigh = 0;
     printf("输入几个");
     scanf("%d",&n);
     HuffmanCode hc[n+1]; 
@@ -47,6 +49,7 @@ int main(void)
     for(i = 1; i <= n;i++)
     printf("%s\n",hc[i]);
     decode(hc , n);
+    Print_Tree(2 * n - 1 ,heigh);
 }
 //ht:哈弗曼树 w:构造哈弗曼树节点的权值 n:构造哈弗曼树节点的个
 void CrtHuffmanTree(int w[] ,int n)
@@ -159,3 +162,16 @@ void decode(HuffmanCode hc[] ,int n)
         printf("weight = %d\n",ht[j].weight);
     }
 }
+
+void Print_Tree(int root , int heigh)
+{
+    int i;
+    if(root == 0)
+    return ;
+    Print_Tree(ht[root].Rchild , heigh + 1);
+    for( i = 0;i < heigh ;i++)
+    printf("   ");
+    printf("%c\n",ht[root].weight);
+    Print_Tree(ht[root].Lchild,heigh + 1);
+}
+
