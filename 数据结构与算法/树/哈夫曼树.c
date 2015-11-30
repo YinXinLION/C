@@ -29,7 +29,7 @@ int main(void)
 {
     int n=3;
     int i;
-    int w[4] = {1,1,2,3};
+    int w[M];
     int ch;
     int heigh = 0;
     HuffmanCode hc[N+1]; 
