@@ -43,4 +43,5 @@ BiTree create_BTree()
         T -> Lchild = create_BTree(T -> Lchild);
         T -> Rchild = create_BTree(T -> Rchild);
     }
+    return T;
 }
